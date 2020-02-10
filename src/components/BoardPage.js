@@ -2,47 +2,39 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { apiCall, baseUrl } from '../helpers/api/callApi'
+import CardList from './CardList'
+import { Loading } from './Loading'
 import { fetchBoardPending, fetchBoardSuccess, fetchBoardError } from '../actions/boardActions'
-
 class BoardPage extends Component {
 
   componentDidMount() {
-    const { shortLink } = this.props.match.params
-    this.fetchBoard(shortLink)
+    this.fetchBoard()
   }
-  
-  fetchBoard(shortLink) {
+
+  fetchBoard() {
+    const { shortLink } = this.props.match.params
     const { apiCall } = this.props
-    let settings = {
-      url: baseUrl + `1//boards/${shortLink}`,
-      method: 'get',
+    let options = {
+      base: {
+        url: baseUrl + `/1/boards/${shortLink}`,
+        method: 'get',
+      },
       params: {
-        key: process.env.REACT_APP_API_KEY,
-        token: process.env.REACT_APP_TOKEN,
         cards: 'all'
       }
     }
-    apiCall(settings, `Board with id: ${shortLink} retrieved`, fetchBoardPending, fetchBoardError, fetchBoardSuccess)
-  }
-
-  shouldComponentRender() {
-    const { meta: pending } = this.props
-    if(pending) return false
-    return true
+    apiCall(options, fetchBoardPending, fetchBoardSuccess, fetchBoardError)
   }
 
   render() {
     const { board, cards } = this.props
-    const { meta: pending } = this.props
+    const { meta: { isLoading } } = this.props
 
-    if (pending) return <h1>Loading...</h1>
+    if (isLoading) return <Loading fallback="Loading your board..." />
     return (
-      <div>
-        <div className="section">
-          <h1 className="title">Board Page</h1>
-
-        </div>
-        <h1>{board.name}</h1>
+      <div className="text-left">
+        <h3 className="title">{board.name}</h3>
+        <CardList cards={cards} />
       </div>
     )
   }
@@ -50,7 +42,7 @@ class BoardPage extends Component {
 
 const mapStateToProps = state => ({
   board: state.currentBoard.data,
-  cards: state.currentBoard.data.cards,
+  cards: state.currentBoard.data.cards || [],
   meta: state.currentBoard.meta
 })
 

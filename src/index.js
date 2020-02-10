@@ -5,6 +5,8 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom'
 import thunk from 'redux-thunk'
 
+import './styles/index.scss'
+
 import {
   applyMiddleware,
   compose,
@@ -15,15 +17,13 @@ import {
 import { Provider } from 'react-redux'
 
 import boardsReducer from './reducers/boardsReducer'
-import boardReducer from './reducers/boardReducer';
-import cardsReducer from './reducers/cardsReducer'
+import boardReducer from './reducers/boardReducer'
 
 require('dotenv').config();
 
 const allReducers = combineReducers({
   boards: boardsReducer,
   currentBoard: boardReducer,
-  // cards: cardsReducer
 })
 
 const allStoreEnhancers = compose(
@@ -32,6 +32,8 @@ const allStoreEnhancers = compose(
 )
 
 const store = createStore(allReducers, allStoreEnhancers)
+
+store.dispatch({ type: 'TEST'})
 
 ReactDOM.render(
   <BrowserRouter>

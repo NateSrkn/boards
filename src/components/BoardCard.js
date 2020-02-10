@@ -3,18 +3,16 @@ import { Link } from 'react-router-dom'
 
 const BoardCard = ({ board }) => {
   return (
-    <div className="card">
-      <header className="card-header">
-        <h4 className="card-header-title">{board.name}</h4>
-      </header>
-      <div className="card-content">
-        <div className="content has-text-left">
+    <div className="card mr-3" style={{ width: '20rem' }}>
+      <div className="card-body text-left">
+        <h5 className="card-title">{board.name}</h5>
+        <p className="card-text">
           {board.desc}
-        </div>
+        </p>
+        <Link to={`/b/${board.shortLink}`} onClick={(event) => console.log(event.target)}className="card-link">
+          View Board
+        </Link>
       </div>
-      <footer className="card-footer">
-        <Link className="card-footer-item" to={`/b/${board.shortLink}`}>Open Board</Link>
-      </footer>
     </div>
   )
 }

@@ -3,28 +3,29 @@ import { FETCH_BOARD_PENDING, FETCH_BOARD_SUCCESS, FETCH_BOARD_ERROR } from '../
 const initialState = {
   data: [],
   meta: {
-    pending: false,
+    isLoading: false,
     error: null
   }
 }
 
 export default function boardReducer(state = initialState, action) {
-  switch(action.type) {
+  let { type, payload, error } = action
+  switch(type) {
     case FETCH_BOARD_PENDING:
       return {
         ...state,
-        meta: {pending: true}
+        meta: {isLoading: true}
       }
     case FETCH_BOARD_SUCCESS:
       return {
         ...state,
-        data: action.payload,
-        meta: {pending: false}
+        data: payload,
+        meta: {isLoading: false}
       }
     case FETCH_BOARD_ERROR:
       return {
         ...state,
-        meta: {pending: false, error: action.error}
+        meta: {isLoading: false, error: error}
       }
     default:
       return state
